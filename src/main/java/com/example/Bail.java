@@ -15,7 +15,7 @@ public class Bail {
         bail.put("Nombre de periode", (long)proposition.get("Nombre de periode"));
         bail.put("Identifiant de l'unite", proposition.get("Identifiant de l'unite").toString());
         bail.put("Proprietaire", proposition.get("Proprietaire").toString());
-        bail.put("Loactaire", nomLocataire);
+        bail.put("Locataire", nomLocataire);
         bail.put("Renouvelable", (Boolean)proposition.get("Renouvelable"));
         bail.put("Supplements", proposition.get("Supplements"));
         bail.put("Date de creation", (JSONObject)TimeManager.getPresentTime());
@@ -42,7 +42,7 @@ public class Bail {
         if((Boolean)proposition.get("Renouvelable")){
             proposition.put("Visible",false);
             long interval = TimeManager.calulateTimeIntervalInSeconds(proposition.get("Periode").toString(), (long)proposition.get("Nombre de periode"));
-            JSONObject dateDedebut = TimeManager.addTimeIntervalToJDate((JSONObject)proposition.get("Date de debut"), 1);
+            JSONObject dateDedebut = TimeManager.addTimeIntervalToJDate((JSONObject)proposition.get("Date de debut"), 1+interval);
             JSONObject dateDeFin = TimeManager.addTimeIntervalToJDate(dateDedebut, interval);
             proposition.put("Date de debut", dateDedebut);
             proposition.put("Date de fin", dateDeFin);

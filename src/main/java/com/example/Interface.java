@@ -106,9 +106,9 @@ public class Interface{
         Scanner scanner = new Scanner(System.in);
 
         while(true){
-            System.out.print("Veuillex entrer votre nom d'utilisayeur: ");
+            System.out.print("Veuillez entrer votre nom d'utilisayeur: ");
             String nomDUtilisateur = scanner.next();
-            System.out.print("Veuillex entrer votre mot de passe: ");
+            System.out.print("Veuillez entrer votre mot de passe: ");
             String motDePasse = scanner.next();
 
             if(Locataire.getLocataire(nomDUtilisateur) != null){
@@ -245,7 +245,7 @@ public class Interface{
                 " /// "+unite.get("Etat").toString()+
                 " /// "+proprietaire.get("Prenom").toString()+" "+proprietaire.get("Nom").toString());
                 if((Boolean)unite.get("Possede une proposition de bail")){
-                    JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail", "Identifiant de l'unite", unite.get("Identifiant").toString());
+                    JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail.json", "Identifiant de l'unite", unite.get("Identifiant").toString());
                     if((Boolean)proposition.get("Visible")){
                         unitesAvecProposition.add(String.valueOf(compte));
                         System.out.print(" /// true");
@@ -306,11 +306,11 @@ public class Interface{
             "\n- Nombre de période: "+propositionDeBail.get("Nombre de periode")+
             "\n- Loyer: "+propositionDeBail.get("Loyer")+"$ par période."+
             "\n- Date du début du bail: "+dateDeDebut.get("Annee")+"/"+dateDeDebut.get("Mois")+"/"+dateDeDebut.get("Jour")+" "+dateDeDebut.get("Heure")+":"+dateDeDebut.get("Minute")+":"+dateDeDebut.get("Seconde"));
-            System.out.println("-Suppléments:");
+            System.out.println("- Suppléments:");
             JSONArray sumplements = (JSONArray)propositionDeBail.get("Supplements");
             for (Object object : sumplements) {
                 JSONObject jObject = (JSONObject)object; 
-                System.out.println("    *"+jObject.get("Nom").toString()+": "+
+                System.out.println("    * "+jObject.get("Nom").toString()+": "+
                 jObject.get("Description").toString()+
                 ". Coût: "+jObject.get("Cout").toString()+"$ par période.");
             }
@@ -327,16 +327,16 @@ public class Interface{
             else{return;}
         }
         //4 - Entre son assurance locataire s'il en possède une.
-        System.out.println("Avez vous une assurnce locataire? (y = oui, n = non)");
+        System.out.println("Avez vous une assurance locataire? (y = oui, n = non)");
         reponse = takeValidAnswer(stringsArray1);
         Scanner scanner = new Scanner(System.in);
         String nomAssureur = null;
         String numeroReferenceAssureur = null;
         if(reponse.equals("y")){
             System.out.print("Veuillez entrer le nom de l'assureur: ");
-            nomAssureur = scanner.next();
-            System.out.println("Veuillez entrer le numéro de référence de la police d'assuerance: ");
-            numeroReferenceAssureur = scanner.next();
+            nomAssureur = scanner.nextLine();
+            System.out.print("Veuillez entrer le numéro de référence de la police d'assuerance: ");
+            numeroReferenceAssureur = scanner.nextLine();
         }
         //5 - Création du bail.
         Bail.addBailToJson(propositionDeBail, nomAssureur, numeroReferenceAssureur, nomLocataire);
@@ -419,12 +419,12 @@ public class Interface{
     private static void bailLocataire(String nomLocataire){
         Scanner scanner = new Scanner(System.in);
         JSONObject locataire = JsonManager.getJsonObjectOfAList("JsonLocataire.json", "Nom d'utilisateur", nomLocataire);
-        if(!(Boolean)locataire.get("Cheche location")){
+        if(!(Boolean)locataire.get("Cherche location")){
             JSONObject bail = new JSONObject();
             JSONArray bails = JsonManager.getArrayOfJsonFile("JsonBail.json");
             for (Object object : bails) {
                 JSONObject jObject = (JSONObject)object;
-                if(bail.get("Locataire").toString().equals(nomLocataire)&&!(Boolean)bail.get("Termine")){
+                if(jObject.get("Locataire").toString().equals(nomLocataire)&&!(Boolean)jObject.get("Termine")){
                     bail = jObject;
                     break;
                 }
@@ -433,8 +433,8 @@ public class Interface{
             JSONObject unite = JsonManager.getJsonObjectOfAList("JsonUnite.json", "Identifiant", bail.get("Identifiant de l'unite").toString());
             JSONObject dateDeDebut = (JSONObject)bail.get("Date de debut");
             JSONObject dateDeFin = (JSONObject)bail.get("Date de fin");
-            JSONObject solde = JsonManager.getJsonObjectOfAList("Solde", "Identifiant du bail", bail.get("Identifiant").toString());
-            System.out.println("Voici les information sur votre bail:");
+            JSONObject solde = JsonManager.getJsonObjectOfAList("JsonSolde.json", "Identifiant du bail", bail.get("Identifiant").toString());
+            System.out.println("\nVoici les information sur votre bail:");
             System.out.println("- Adresse: "+unite.get("Adresse").toString()+ 
             "\n- Propriétaire: "+proprietaire.get("Prenom").toString()+" "+proprietaire.get("Nom").toString()+
             "\n- Date de début: "+dateDeDebut.get("Annee")+"/"+dateDeDebut.get("Mois")+"/"+dateDeDebut.get("Jour")+" "+
@@ -443,7 +443,7 @@ public class Interface{
             dateDeFin.get("Heure")+":"+dateDeFin.get("Minute")+":"+dateDeFin.get("Seconde")+
             "\n- Nom de l'assureur: "+bail.get("Nom assureur")+
             "\n- Numéro de l'assurance: "+bail.get("Numero d'assurance")+
-            "\n- Renouvelable: "+bail.get("Renouvelalble")+
+            "\n- Renouvelable: "+bail.get("Renouvelable")+
             "\n- Renouvelé: "+locataire.get("A renouvele le bail"));
             JSONArray supplements = (JSONArray)bail.get("Supplements");
             if(!supplements.isEmpty()){
@@ -457,10 +457,12 @@ public class Interface{
             "\n- Payé: "+solde.get("Payer"));
             
             if((Boolean)bail.get("Renouvelable")&&!(Boolean)locataire.get("A renouvele le bail")){
+                System.out.print("\nAppuyez sur la touche entrer pour continuer.");
+                scanner.nextLine();
                 JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail.json", "Identifiant de l'unite", unite.get("Identifiant").toString());
                 JSONObject dateDeDebutp = (JSONObject)proposition.get("Date de debut");
                 JSONObject dateDeFinp = (JSONObject)proposition.get("Date de fin");
-                System.out.println("\nVoulez-vous renouveler ce bail? (y = oui, n= non) Voici les informations de la proposition de bail pour le renouvellement:");
+                System.out.println("\nVoulez-vous renouveler ce bail? (y = oui, n = non) Voici les informations de la proposition de bail pour le renouvellement:");
                 System.out.println("- Période: "+proposition.get("Periode")+ 
                 "\n- Nombre de périodes: "+proposition.get("Nombre de periode")+
                 "\n- Loyer par période: "+proposition.get("Loyer")+
@@ -479,13 +481,14 @@ public class Interface{
                     } 
                 }
                 System.out.println();
-                String[] arrayList0 = {"y,n"};
+                String[] arrayList0 = {"y","n"};
                 String reponse0 = takeValidAnswer(arrayList0);
                 if(reponse0.equals("y")){
                     //Changer le paramètre à renouvelé le bail de locataire
                     JsonManager.modifyBoolArgumentOfList("JsonLocataire.json", "Nom d'utilisateur", nomLocataire, "A renouvele le bail", true);
                     //Changer le paramètre de visibilité et Est pour un renouvelement de la proposition de bail
                     JsonManager.modifyBoolArgumentOfList("JsonPropositionDeBail.json", "Identifiant de l'unite", unite.get("Identifiant").toString(), "Visible", false);
+                    JsonManager.modifyBoolArgumentOfList("JsonPropositionDeBail.json", "Identifiant de l'unite", unite.get("Identifiant").toString(), "Est pour un renouvelement", true);
                     System.out.println("\nLe bail a été renouvelé avec succès!");
                 }
             }
@@ -701,8 +704,7 @@ public class Interface{
                     System.out.print("- Entrez l'adresse de l'unité: ");
                     String adresse = scanner.nextLine();
                     System.out.print("- Entrez la ville de l'unité: ");
-                    scanner.nextLine();
-                    String ville = scanner.next();
+                    String ville = scanner.nextLine();
                     System.out.println("- Entrez l'aire de l'unité (en m2):");
                     long aire = takePositiveInteger();
                     long nbChambre;
@@ -770,12 +772,12 @@ public class Interface{
                     stringArrayList1.add("a");
                     if(jUnite.get("Type").toString().equals("Logement")){
                         System.out.println("- Le nombre de chambre de l'unité = m");
-                        stringArrayList1.add("c");
+                        stringArrayList1.add("m");
                     }
                     System.out.println("- Le nombre de salle de bain de l'unité = s");
                     stringArrayList1.add("s");
                     System.out.println("- La condition de l'unité = c");
-                    stringArrayList1.add("a");
+                    stringArrayList1.add("c");
                     String[] stringArray2 = new String[stringArrayList1.size()];
                     stringArray1 = stringArrayList1.toArray(stringArray2);
                     String reponse3 = takeValidAnswer(stringArray2);

@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -33,7 +34,7 @@ public class PropositionDeBail {
 
     public static void modifierPropositionDeBail(String nomProprietaire){
         System.out.println("Voici les propositions que vous pouvez modiffier:");
-        JSONArray propositions = JsonManager.getArrayOfJsonFile("JsonUnite.json");
+        JSONArray propositions = JsonManager.getArrayOfJsonFile("JsonPropositionDeBail.json");
         ArrayList<String> listeIdentifiant = new ArrayList<String>();
         ArrayList<String> listeIndexe = new ArrayList<String>(); 
         listeIndexe.add("r");
@@ -44,7 +45,7 @@ public class PropositionDeBail {
             JSONObject proposition = (JSONObject)object;
             JSONObject date = (JSONObject)proposition.get("Date de debut");
             JSONObject unite = JsonManager.getJsonObjectOfAList("JsonUnite.json", "Identifiant", proposition.get("Identifiant de l'unite").toString());
-            if(proposition.get("Nom d'utilisateur du proprietaire").equals(nomProprietaire)&&!(Boolean)proposition.get("Est pour un renouvelement")){
+            if(proposition.get("Proprietaire").equals(nomProprietaire)&&!(Boolean)proposition.get("Est pour un renouvlement")){
                 listeIndexe.add(String.valueOf(compte));
                 listeIdentifiant.add(proposition.get("Identifiant").toString());
                 System.out.println(compte + " - ///// "+unite.get("Adresse")+
@@ -56,64 +57,109 @@ public class PropositionDeBail {
                 compte++;
             }
         }
-        //2 - Demande quelle unité il veut modifier ou s'il veut retourner au menu unité
+        //2 - Demande quelle proposition il veut modifier ou s'il veut retourner au menu unité
         String[] stringArray1 = new String[listeIndexe.size()];
         stringArray1 = listeIndexe.toArray(stringArray1);
-        System.out.println("\nVeuillez entrer le numéro de la poposition que vous désirez modiffier ou enter r pour retourner au menu des unités.");
+        System.out.println("\nVeuillez entrer le numéro de la poposition que vous désirez modiffier ou entrer r pour retourner au menu des unités.");
         String reponse1 = Interface.takeValidAnswer(stringArray1);
-        if(!reponse1.equals("r")){
+        if(reponse1.equals("r")){
             return;
         }
         String nomProposition = listeIdentifiant.get(Integer.valueOf(reponse1));
         JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail.json", "Identifiant", nomProposition);
         ArrayList<String> stringArrayList1 = new ArrayList<String>();
         //3 - Demande quel élément de l'unité il veut changer et s'il veut retourner au menu unité
-        System.out.println("Quel élément de l'unité voulez vous changer?");
-        System.out.println("- L'aire = a");
+        System.out.println("Quel élément de la proposition voulez vous changer?");
+        System.out.println("- La période = p");
+        stringArrayList1.add("p");
+        System.out.println("- Le nombre de périodes = n");
+        stringArrayList1.add("n");
+        System.out.println("- Si le bail est renouvelable = r");
+        stringArrayList1.add("r");
+        System.out.println("- Ajouter un supplément = a");
         stringArrayList1.add("a");
-        if(proposition.get("Type").toString().equals("Logement")){
-            System.out.println("- Le nombre de chambre de l'unité = m");
-            stringArrayList1.add("c");
-        }
-        System.out.println("- Le nombre de salle de bain de l'unité = s");
+        System.out.println("- Supprimer un supplément = s");
         stringArrayList1.add("s");
-        System.out.println("- La condition de l'unité = c");
-        stringArrayList1.add("a");
+        System.out.println("- Changer la visibilité = v");
+        stringArrayList1.add("v");
         String[] stringArray2 = new String[stringArrayList1.size()];
         stringArray1 = stringArrayList1.toArray(stringArray2);
         String reponse3 = Interface.takeValidAnswer(stringArray2);
         //4 - Input la nouvelle valeur et met dans une boucle jusqu'à avoir une valeur satisfaisante
-        String elementChange;
-        if(reponse3.equals("a")){elementChange = "Aire";}
-        else if(reponse3.equals("m")){elementChange = "Nombre de chambre";}
-        else if(reponse3.equals("s")){elementChange = "Nombre de salle de bain";}
-        else{elementChange = "Condition";}
+        
 
         System.out.println();
-        if(reponse3.equals("c")){
-            System.out.println("Enterz la nouvelle condition de l'unité. (l = louable, r = pas louable pour réparation)");
-            String[] stringArray3 = {"l","r"};
-            String reponse4 = Interface.takeValidAnswer(stringArray3);
-            if(reponse4.equals("l")){
-                JsonManager.modifyArgumentOfList("JsonUnite.json", "Identifiant de l'unite", nomProposition, elementChange, "Louable");
+
+        if(reponse3.equals("p")){
+            System.out.println("Entrez la nouvelle valeur de la période (o = Mois, j = Jour, h = Heure, m = Minute, s = Secondes)");
+            String[] stringArray3 = {"o","j","h","m","s"};
+            reponse3 = Interface.takeValidAnswer(stringArray3);
+            String periode;
+            if(reponse3.equals("o")){periode = "Mois";}
+            else if(reponse3.equals("j")){periode = "Jour";}
+            else if(reponse3.equals("h")){periode = "Heure";}
+            else if(reponse3.equals("m")){periode = "Minute";}
+            else{periode = "Seconde";}
+            JsonManager.modifyArgumentOfList("JsonPropositionDeBail.json", "Identifiant", nomProposition, "Periode", periode);
+        }
+        else if(reponse3.equals("n")){
+            System.out.println("Entrez la nouvelle valeur du nombre de périodes.");
+            long reponse = Interface.takePositiveInteger();
+            JsonManager.modifyIntArgumentOfList("JsonPropositionDeBail.json", "Identifiant", nomProposition, "Nombre de periode", reponse);
+        }
+        else if(reponse3.equals("r")){
+            System.out.println("Entrez si vous voulez que le bail soit renouvelable. (y = oui, n = non)");
+            String[] stringArray3 = {"y","n"};
+            reponse3 = Interface.takeValidAnswer(stringArray3);
+            Boolean renouvelable;
+            if(reponse3.equals("y")){renouvelable =true;}
+            else{renouvelable=false;}
+            JsonManager.modifyBoolArgumentOfList("JsonPropositionDeBail.json", "Identifiant", nomProposition, "Renouvelable", renouvelable);
+        }
+        else if(reponse3.equals("a")){
+            Scanner scanner = new Scanner(System.in);
+            JSONObject supplement = new JSONObject();
+            System.out.print("Entrez le nom du nouveau supplément: ");
+            String nomSuplement = scanner.nextLine();
+            System.out.print("- Entrez une description du suplément: ");
+            String descriptionSuplement =  scanner.nextLine();
+            System.out.println("- Entrez coût du supplément par période en $ canadien (seulement des entiers son acceptés).");
+            long cout = Interface.takePositiveInteger();
+            supplement.put("Nom", nomSuplement);
+            supplement.put("Description", descriptionSuplement);
+            supplement.put("Cout", cout);
+            JSONArray supplements = (JSONArray)proposition.get("Supplements");
+            supplements.add(supplement);
+            JsonManager.modifyJArrayArgumentOfList("JsonPropositionDeBail.json", "Identifiant", nomProposition, "Supplements", supplements);
+        }
+        else if(reponse3.equals("s")){
+            JSONArray supplements = (JSONArray)proposition.get("Supplements");
+            System.out.println("Lequel de ces suppléments voulez vous supprimer? (Entrez l'indexe associé au supplément à supprimer)");
+            ArrayList<String> indexSupp = new ArrayList<String>();
+            int compte2 = 0;
+            for (Object object : supplements) {
+                JSONObject supplement = (JSONObject)object;
+                System.out.println(compte2+" - "+supplement.get("Nom")+": "+supplement.get("Description")+". "+supplement.get("Cout")+"$.");
+                indexSupp.add(String.valueOf(compte2));
+                compte2++;
             }
-            else{
-                JsonManager.modifyArgumentOfList("JsonUnite.json", "Identifiant", nomProposition, elementChange, "Pas louable pour reparation");
-                JSONArray jArray2 = JsonManager.getArrayOfJsonFile("JsonPropositionDeBail.json");
-                for (Object object : jArray2) {
-                    JSONObject proposition = (JSONObject)object;
-                    if(proposition.get("Proprietaire").equals(nomProprietaire)){
-                        JsonManager.removeObjectToJsonList("Proprietaire", nomProprietaire, "JsonPropositionDeBail.json");
-                        break;
-                    }
-                }
-            }
+            String[] stringArray3 = new String[indexSupp.size()];
+            stringArray1 = indexSupp.toArray(stringArray2);
+            reponse3 = Interface.takeValidAnswer(stringArray1);
+            int index = Integer.valueOf(reponse3);
+            supplements.remove(index);
+            System.out.println(index);
+            System.out.println(supplements);
+            JsonManager.modifyJArrayArgumentOfList("JsonPropositionDeBail.json", "Identifiant", nomProposition, "Supplements", supplements);
         }
         else{
-            System.out.println("Entrez la nouvelle valeur désiré.");
-            Long reponse = Interface.takePositiveInteger();
-            JsonManager.modifyIntArgumentOfList("JsonUnite.json", "Identifiant", nomProposition, elementChange, reponse);
+            System.out.println("Entrez si vous voulez que la proposition de bail soit visible par les locataire. (y = oui, n = non)");
+            String[] stringArray3 = {"y","n"};
+            reponse3 = Interface.takeValidAnswer(stringArray3);
+            Boolean visible;
+            if(reponse3.equals("y")){visible =true;}
+            else{visible=false;}
+            JsonManager.modifyBoolArgumentOfList("JsonPropositionDeBail.json", "Identifiant", nomProposition, "Visible", visible);
         }
-        //5 - Retour au menu
     } 
 }
