@@ -223,7 +223,6 @@ public class Interface{
         System.out.println("\nVoulez vous voir toutes les unités = t, seulements celles possédent une proposition de bail = p ou faire une recherche avancée = r.");
         String[] stringArray0 = {"t","p","r"};
         String reponse = takeValidAnswer(stringArray0);
-        System.out.println("\nVoici les unités:\n");
         JSONArray jarray = JsonManager.getArrayOfJsonFile("JsonUnite.json");
         ArrayList<String> unitesAvecProposition = new ArrayList<String>();
         ArrayList<String> stringArrayListUniteNames = new ArrayList<String>(); 
@@ -232,6 +231,7 @@ public class Interface{
          
         //2 - Affiche les unités selon le choix en 1.
         if(reponse.equals("t")){
+            System.out.println("\nVoici les unités:\n");
             System.out.println("X - ///// Type /// Aire(m2) /// Condition /// État /// Nom propriétaire /// Possède une proposition de bail /// Adresse /////");
             for (Object object : jarray) {
                 JSONObject unite = (JSONObject)object;
@@ -257,6 +257,7 @@ public class Interface{
             }
         }
         else if(reponse.equals("p")){
+            System.out.println("\nVoici les unités:\n");
             System.out.println("X - ///// Type /// Aire(m2) /// Condition /// État /// Nom propriétaire /// Adresse /////");
             for (Object object : jarray) {
                 JSONObject unite = (JSONObject)object;
@@ -278,7 +279,73 @@ public class Interface{
             }
         }
         else{
-            ///À faire: recheche personalisé
+            System.out.println("\nVoulez-vous voir les unités de logement = l, de surfaces ouvertes commerciales = c, ou de magasin = m?");
+            String[] stringArray1 = {"l","c","m"};
+            String reponse2 = takeValidAnswer(stringArray1);
+            String[] stringArray2 = {"a","b","c","r"};
+            int[] reponse3 = {0,0,0};
+            while(true){
+                String temp = "";
+                System.out.println("\nVoulez-vous ajouter d'autres critères de recherche?");
+                if(reponse3[0] == 0){
+                    System.out.println("Aire de l'untié = a");
+                }
+                if(reponse3[1] == 0){
+                    System.out.println("Nombre de chambre de bain de l'unité = b");
+                }
+                if(reponse2.equals("l") && reponse3[2] == 0){
+                    System.out.println("Nombre de chambre de l'unité = c");
+                }
+                System.out.println("Commencer recherche = r");
+                temp = takeValidAnswer(stringArray2);
+                if(temp.equals("a") && reponse3[0] == 0){
+                    System.out.println("Quel aire minimum recherchez-vous?");
+                    reponse3[0] = (int)takePositiveInteger();
+                }
+                else if(temp.equals("b") && reponse3[1] == 0){
+                    System.out.println("Combien de chambres de bains recherchez-vous?");
+                    reponse3[1] = (int)takePositiveInteger();
+                }
+                else if(reponse2.equals("l") && temp.equals("c") && reponse3[2] == 0){
+                    System.out.println("Combien de chambres recherchez-vous?");
+                    reponse3[2] = (int)takePositiveInteger();
+                }
+                else if(temp.equals("r")){
+                    break;
+                }
+            }
+            System.out.println("");
+            System.out.println("\nVoici les unités:\n");
+            System.out.println("X - ///// Type /// Aire(m2) /// Condition /// État /// Nom propriétaire /// Possède une proposition de bail /// Adresse /////");
+            for (Object object : jarray) {
+                JSONObject unite = (JSONObject)object;
+                JSONObject proprietaire = JsonManager.getJsonObjectOfAList("JsonPersonne.json", "Nom d'utilisateur", unite.get("Nom d'utilisateur du proprietaire").toString());
+                stringArrayListUniteNames.add((String)unite.get("Identifiant"));
+                if(Integer.parseInt(unite.get("Aire").toString()) >= reponse3[0] && Integer.parseInt(unite.get("Nombre de salle de bain").toString()) >= reponse3[1]){
+                    /*if(reponse2.equals("l")){
+                        if(unite.get("Type").toString().equals(arg0)){
+                            Integer.parseInt(unite.get("Nombre de chambre").toString()) < reponse3[2]){
+                                continue;
+                            }
+                        }
+                    }*/
+                    System.out.print(compte + " - ///// "+unite.get("Type").toString()+
+                    " /// "+unite.get("Aire").toString()+
+                    " /// "+unite.get("Condition").toString()+
+                    " /// "+unite.get("Etat").toString()+
+                    " /// "+proprietaire.get("Prenom").toString()+" "+proprietaire.get("Nom").toString());
+                    if((Boolean)unite.get("Possede une proposition de bail")){
+                        JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail", "Identifiant de l'unite", unite.get("Identifiant").toString());
+                        if((Boolean)proposition.get("Visible")){
+                            unitesAvecProposition.add(String.valueOf(compte));
+                            System.out.print(" /// true");
+                        }else{System.out.print(" /// false");}
+                    }
+                    System.out.println(" /// "+unite.get("Adresse").toString()+" /////");
+                    
+                    compte++;
+                }
+            }
         }
         JSONObject locataire = JsonManager.getJsonObjectOfAList("JsonLocataire.json", "Nom d'utilisateur", nomLocataire);
         if(!(boolean)locataire.get("Cherche location")){
