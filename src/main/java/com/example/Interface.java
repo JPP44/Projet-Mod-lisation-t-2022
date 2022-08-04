@@ -36,7 +36,7 @@ public class Interface{
         System.out.println("////  00000  000   0000 0   0   0   00000  000  0   0     0000      0   0 00000 0   0  000    0   00000 000   00  ////");
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////\n\n\n");
         
-        System.out.println("Bivenu sur le logiciel de location de propriété \"Location 5 minutes!\"\nVous pouvez quitter le logiciel à tout moment avec la comande Ctrl+c.\n\n");
+        System.out.println("Bienvenu sur le logiciel de location de propriété \"Location 5 minutes!\"\nVous pouvez quitter le logiciel à tout moment avec la comande Ctrl+c.\n\n");
         System.out.println("Voulez-vous vous conecter ou vous inscrire? (c = connecter, i = inscrire)");
         String[] stringArray0 = {"c","i"};
         String reponse0 = takeValidAnswer(stringArray0);
@@ -61,6 +61,50 @@ public class Interface{
             }
         }
 
+    }
+
+
+    private static void miseAJour(){
+        JSONObject now = TimeManager.getPresentTime();
+
+        // Scan la liste de bail pour voir ce qui est à mettre à jour
+        JSONArray listBails = JsonManager.getArrayOfJsonFile("JsonBail.json");
+        for (Object object : listBails) {
+            JSONObject bail = (JSONObject)object;
+            JSONObject dateDeFin = (JSONObject)bail.get("Date de fin");
+            if(TimeManager.getDate1BeforeDate2(dateDeFin, now)&&!(Boolean)bail.get("Termine")){
+                JSONObject locataire =JsonManager.getJsonObjectOfAList("JsonLocataire.json", "Nom d'utilisateur", bail.get("Locataire").toString());
+                JSONObject  unite = JsonManager.getJsonObjectOfAList("JsonUnite.json", "Nom d'utilisateur du proprietaire", bail.get("Proprietaire").toString());
+                JsonManager.modifyBoolArgumentOfList("JsonBail.json", "Identifiant", bail.get("Identifiant").toString(), "Termine", true);
+                String etat = unite.get("Etat").toString();
+                String newEtat;
+                if(etat.equals("Loue")){newEtat="Libre";}
+                else{newEtat="Loue";}
+                JsonManager.modifyArgumentOfList("JsonUnite.json", "Identifiant", unite.get("Identifiant").toString(), "Etat", newEtat);
+                if((Boolean)locataire.get("A renouvele le bail")){
+                    JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail.json", "Identifiant de l'unite", unite.get("Identifiant").toString());
+                    JsonManager.modifyBoolArgumentOfList("JsonUnite.json", "Identifiant", unite.get("Identifiant").toString(), "Possede une proposition de bail", false);
+                    JsonManager.modifyBoolArgumentOfList("JsonLocataire.json", "Nom d'utilisateur", locataire.get("Nom d'utilisateur").toString(), "A renouvele le bail", false);
+                    JsonManager.removeObjectToJsonList("Identifiant", proposition.get("Identifiant").toString(),"JsonPropositionDeBail");
+                    Bail.addBailToJson(proposition, bail.get("Nom assureur").toString(), bail.get("Numero assurance").toString(), bail.get("Locataire").toString());
+                }
+                else{
+                    JsonManager.modifyBoolArgumentOfList("JsonLocataire.json", "Nom d'utilisateur", locataire.get("Nom d'utilisateur").toString(), "Cherche location", true);
+                }
+
+            }
+        }
+
+        // Scan la liste de proposition de bail pour voir ce qui est à mettre à jour
+        JSONArray listPropositions = JsonManager.getArrayOfJsonFile("JsonPropositionDeBail.json");
+        for (Object object : listPropositions) {
+            JSONObject proposition = (JSONObject)object;
+            JSONObject dateDeDebut = (JSONObject)proposition.get("Date de debut");
+            if(TimeManager.getDate1BeforeDate2(dateDeDebut, now)&&!(Boolean)proposition.get("Est pour un renouvlement")){
+                JsonManager.modifyBoolArgumentOfList("JsonUnite.json", "Identifiant", proposition.get("Identifiant de l'unite").toString(), "Possede une proposition de bail", false);
+                JsonManager.removeObjectToJsonList("Identifiant", proposition.get("Identifiant").toString(), "JsonPropositionDeBail.json");
+            }
+        }
     }
 
 
@@ -186,7 +230,7 @@ public class Interface{
                 rechercheUniteLocataire(locataireName);
             }
             else if(reponse0.equals("p")){
-                paimentLocataire();
+                paimentLocataire(locataireName);
             }
             else if(reponse0.equals("b")){
                 bailLocataire(locataireName);
@@ -219,6 +263,7 @@ public class Interface{
     }
 
     private static void rechercheUniteLocataire(String nomLocataire){
+        miseAJour();
         //1 - demande si veut juste voir toutes les unitées, toutes les unitées avec proposition de bail ou faire une recherche avancée.
         System.out.println("\nVoulez vous voir toutes les unités = t, seulements celles possédent une proposition de bail = p ou faire une recherche avancée = r.");
         String[] stringArray0 = {"t","p","r"};
@@ -263,7 +308,7 @@ public class Interface{
                 JSONObject unite = (JSONObject)object;
                 JSONObject proprietaire = JsonManager.getJsonObjectOfAList("JsonPersonne.json", "Nom d'utilisateur", unite.get("Nom d'utilisateur du proprietaire").toString());
                 if((Boolean)unite.get("Possede une proposition de bail")){
-                    JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail", "Identifiant de l'unite", unite.get("Identifiant").toString());
+                    JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail.json", "Identifiant de l'unite", unite.get("Identifiant").toString());
                     if((Boolean)proposition.get("Visible")){
                         stringArrayListUniteNames.add((String)unite.get("Identifiant").toString());
                         unitesAvecProposition.add(String.valueOf(compte));
@@ -410,8 +455,8 @@ public class Interface{
     }
 
 
-    private static void paimentLocataire(){
-        System.out.println("In paiment l");
+    private static void paimentLocataire(String nomLocataire){
+        Solde.afficherSoldeEtHistoriqueDePaiementLocataire(nomLocataire);;
     }
 
 
@@ -484,6 +529,7 @@ public class Interface{
 
 
     private static void bailLocataire(String nomLocataire){
+        miseAJour();
         Scanner scanner = new Scanner(System.in);
         JSONObject locataire = JsonManager.getJsonObjectOfAList("JsonLocataire.json", "Nom d'utilisateur", nomLocataire);
         if(!(Boolean)locataire.get("Cherche location")){
@@ -803,6 +849,7 @@ public class Interface{
                 
             }
             else if(reponse0.equals("m")){
+                miseAJour();
                 //1 - Montre toute les unités du propriétaire
                 System.out.println("\nVoici vos unités:\n");
                 JSONArray jarray = JsonManager.getArrayOfJsonFile("JsonUnite.json");
@@ -887,6 +934,7 @@ public class Interface{
 
             }
             else if(reponse0.equals("b")){
+                miseAJour();
                 //1 Affiche les unités qui peuvent avoir une nouvelle porp de bail (pas réservé, pas en construction, n'a pas déjà une prop)
                 System.out.println("\nVoici vos unités qui peuvent se voir créer une nouvelle porposition de bail:\n");
                 JSONArray jarray = JsonManager.getArrayOfJsonFile("JsonUnite.json");
@@ -1009,6 +1057,7 @@ public class Interface{
                 
             }
             else if(reponse0.equals("p")){
+                miseAJour();
                 PropositionDeBail.modifierPropositionDeBail(nomProprietaire);
             }
             

@@ -9,7 +9,7 @@ import org.json.simple.JSONObject;
 public class TimeManager {
 
     public static void main(String[] args) {
-        JSONObject newDate = getPresentTime();
+        JSONObject newDate = takeValidJObjectDate();
         System.out.println(newDate);
 
     }
@@ -109,7 +109,7 @@ public class TimeManager {
             jour = Interface.takePositiveInteger();
             if((mois == 1 || mois == 3 || mois == 5 || mois == 7 || mois == 8 || mois == 10 || mois == 12)&&jour<=31){
                 if(isToday){
-                    if(jour >= date.getMonthValue()){
+                    if(jour >= date.getDayOfMonth()){
                         if(!(jour == date.getDayOfMonth())){
                             isToday = false;
                         }
@@ -119,7 +119,7 @@ public class TimeManager {
             }
             else if((mois == 4 || mois == 6 || mois == 9 || mois == 11)&&jour<=30){
                 if(isToday){
-                    if(jour >= date.getMonthValue()){
+                    if(jour >= date.getDayOfMonth()){
                         if(!(jour == date.getDayOfMonth())){
                             isToday = false;
                         }
@@ -129,7 +129,7 @@ public class TimeManager {
             }
             else if(jour <= 27){
                 if(isToday){
-                    if(jour >= date.getMonthValue()){
+                    if(jour >= date.getDayOfMonth()){
                         if(!(jour == date.getDayOfMonth())){
                             isToday = false;
                         }
