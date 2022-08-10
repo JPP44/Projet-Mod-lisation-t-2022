@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
 
 public class Unite {
     
-    //Methodes statiques(peu y acceder sans instancier un objet de cette classe) 
+    // Peremet de créer une unité et de l'ajouter à un fichier json
     public static void addUniteToJson(String type, String adresse, String ville, long aire, String nomProprietaire, long nbChambre, long nbSalleDeBain, String date, String condition){
         JSONObject unite = new JSONObject();
         unite.put("Type", type);

@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
 
 public class Locataire {
     
-    //Methodes statiques(peu y acceder sans instancier un objet de cette classe) 
+    // Créer et ajoute un locataire à un fichier Json
     public static void addLocataireToJson(String nomDUtilisateur, String motDePasse, String prenom, String nom, String coteDeCredit){
         JSONObject nouveauLocataire = new JSONObject();
         nouveauLocataire.put("Nom d'utilisateur", nomDUtilisateur);
@@ -29,6 +29,7 @@ public class Locataire {
         Personne.addPersonneToJson(nomDUtilisateur, motDePasse, prenom, nom);
     }
 
+    // Permet de retrouver un locataire dans la liste de locataire
     public static JSONObject getLocataire(String nomDUtilisateur){
         String listName = "locataireList";
         JSONObject file = JsonManager.translateFileToJSONObject("JsonLocataire.json"); 

@@ -11,7 +11,7 @@ public class Solde {
         afficherSoldeEtHistoriqueDePaiementLocataire("JPP");
     }
     
-    // Créer un nouveau solde
+    // Créer un nouveau solde et l'ajoute au json
     public static void addSoldeToJson(String bailId, JSONObject propDeBail,String nomLocataire){
         JSONObject solde = new JSONObject();
         solde.put("Locataire", nomLocataire);

@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
 
 public class Personne {
     
-    //Methodes statiques(peu y acceder sans instancier un objet de cette classe) 
+    // Créer et ajoute une personne à un fichier json
     public static void addPersonneToJson(String nomDUtilisateur, String motDePasse, String prenom, String nom){
         JSONObject nouvellePersonne = new JSONObject();
         nouvellePersonne.put("Nom d'utilisateur", nomDUtilisateur);
@@ -22,7 +22,7 @@ public class Personne {
         JsonManager.addObjectToJsonList(nouvellePersonne, "JsonPersonne.json");
     }
 
-
+    // Permet de trouver une personne dans un fichier json
     public static JSONObject getPersonne(String nomDUtilisateur){
         String listName = "personneList";
         JSONObject file = JsonManager.translateFileToJSONObject("JsonPersonne.json"); 

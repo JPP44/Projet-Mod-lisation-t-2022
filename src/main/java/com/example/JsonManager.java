@@ -71,7 +71,7 @@ public class JsonManager {
 
     }
 
-
+    /// Permet de modifier l'agument de type bool d'un l'un des objet de la liste d'un des fichier JSON en entrant certaines valeurs 
     public static void modifyBoolArgumentOfList(String targetFile, String keySearch, String keyValue, String keyChanged, Boolean newValue){
         
         JSONObject file = translateFileToJSONObject(targetFile);
@@ -87,7 +87,7 @@ public class JsonManager {
 
     }
 
-
+    /// Permet de modifier l'agument de type long d'un l'un des objet de la liste d'un des fichier JSON en entrant certaines valeurs
     public static void modifyIntArgumentOfList(String targetFile, String keySearch, String keyValue, String keyChanged, long newValue){
         
         JSONObject file = translateFileToJSONObject(targetFile);
@@ -103,7 +103,7 @@ public class JsonManager {
 
     }
 
-
+    /// Permet de modifier l'agument de type JSONObject d'un l'un des objet de la liste d'un des fichier JSON en entrant certaines valeurs
     public static void modifyJObjectArgumentOfList(String targetFile, String keySearch, String keyValue, String keyChanged, JSONObject newValue){
         
         JSONObject file = translateFileToJSONObject(targetFile);
@@ -119,6 +119,7 @@ public class JsonManager {
 
     }
 
+    /// Permet de modifier l'agument de type JSONArray d'un l'un des objet de la liste d'un des fichier JSON en entrant certaines valeurs
     public static void modifyJArrayArgumentOfList(String targetFile, String keySearch, String keyValue, String keyChanged, JSONArray newValue){
         
         JSONObject file = translateFileToJSONObject(targetFile);
@@ -134,7 +135,7 @@ public class JsonManager {
 
     }
 
-
+    // Permet de modifier un objet d'un jsonobject dans une liste de json 
     public static void modifyJSONObjectOfAnObject(String targetFile, String keySearch, String keyValue, String keyChanged, String newValue) throws ParseException{
         
         JSONObject file = translateFileToJSONObject(targetFile);
@@ -181,7 +182,7 @@ public class JsonManager {
         updateJsonFile(targetFile, file);
     } 
 
-
+    // Supprime un certain objet d'une liste de json 
     public static void removeObjectToJsonList(String keySearch, String keyValue, String targetFile){
         JSONObject file = translateFileToJSONObject(targetFile);
         String rawListName = file.keySet().toString();
@@ -206,7 +207,7 @@ public class JsonManager {
         return object;
     } 
 
-
+    // Retourne le JsonArray d'un des json  
     public static JSONArray getArrayOfJsonFile(String targetFile){
         JSONObject file = translateFileToJSONObject(targetFile);
         String rawListName = file.keySet().toString();

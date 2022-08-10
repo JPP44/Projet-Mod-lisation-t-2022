@@ -5,7 +5,7 @@ import org.json.simple.JSONObject;
 
 public class Bail {
 
-    //Methodes statiques(peu y acceder sans instancier un objet de cette classe) 
+    // Méthode pour créer un bail et l'ajouter au fichier Json 
     public static void addBailToJson(JSONObject proposition, String nomAssureur, String numeroDAssurance, String nomLocataire){
         JSONObject bail = new JSONObject();
         bail.put("Loyer", (long)proposition.get("Loyer"));

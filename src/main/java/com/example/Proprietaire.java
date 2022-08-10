@@ -12,7 +12,7 @@ import org.json.simple.parser.ParseException;
 
 public class Proprietaire extends Personne{
     
-    //Methodes statiques(peu y acceder sans instancier un objet de cette classe) 
+    // Créer un propriétaire à l'ajoute au json
     public static void addProprietaireToJson(String nomDUtilisateur, String motDePasse, String prenom, String nom){
         JSONObject nouveauProprietaire = new JSONObject();
         nouveauProprietaire.put("Nom d'utilisateur", nomDUtilisateur);
@@ -21,6 +21,7 @@ public class Proprietaire extends Personne{
         Personne.addPersonneToJson(nomDUtilisateur, motDePasse, prenom, nom);
     }
 
+    // Permet de trouver un propriétaire dans un fichier json
     public static JSONObject getProprietaire(String nomDUtilisateur){
         String listName = "proprietaireList";
         JSONObject file = JsonManager.translateFileToJSONObject("JsonProprietaire.json"); 

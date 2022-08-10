@@ -7,6 +7,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class PropositionDeBail {
+
+    // Permet de créer une proposition de bail et de l'ajouter au json 
     public static void createPropositionDeBail(String idUnite, String periode, long nbPeriode, long loyer, JSONObject dateDeDebut, JSONObject dateDeFin, Boolean renouvelable, String nomProprietaire, JSONArray suplements){
         JSONObject propDeBail = new JSONObject();
         propDeBail.put("Identifiant de l'unite", idUnite);
@@ -31,13 +33,18 @@ public class PropositionDeBail {
         JsonManager.addObjectToJsonList(propDeBail, "JsonPropositionDeBail.json");
     }
 
-
+    // Permet de modifier une proposition de bail
     public static void modifierPropositionDeBail(String nomProprietaire){
         System.out.println("Voici les propositions que vous pouvez modiffier:");
         JSONArray propositions = JsonManager.getArrayOfJsonFile("JsonPropositionDeBail.json");
         ArrayList<String> listeIdentifiant = new ArrayList<String>();
         ArrayList<String> listeIndexe = new ArrayList<String>(); 
         listeIndexe.add("r");
+
+        System.out.println("Combiens d'unités à la fois voulez-vous voir?");
+        long n = Interface.takePositiveInteger();
+        long itteration = 0; 
+
 
         int compte = 0;
         System.out.println("X - ///// Adresse /// Date de début /// Durée d'une période  /// Nombre de période /// Loyer /////");
@@ -54,6 +61,16 @@ public class PropositionDeBail {
                 " /// "+proposition.get("Periode").toString()+
                 " /// "+proposition.get("Nombre de periode").toString()+
                 " /// "+proposition.get("Loyer").toString()+"$ /////");
+
+                itteration++;
+                if(itteration==n){
+                    String[] stringArrayYN = {"y","n"};
+                    System.out.println("Voulez voir plus d'unités? (y = oui, n = non)");
+                    String reponse = Interface.takeValidAnswer(stringArrayYN);
+                    if(reponse.equals("n")){break;}
+                    itteration = 0;
+                }
+
                 compte++;
             }
         }

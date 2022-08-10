@@ -17,12 +17,12 @@ import org.json.simple.parser.ParseException;
 
 public class Interface{
 
+    // Main pour pouvoir mettre en marche le système en entier
     public static void main( String[] args ) throws ParseException {
-        //startSystem();
-        uniteProprietaire("j");
+        startSystem();
     }
 
-
+    // Fonction pour mettre en marche le système 
     private static void startSystem() throws ParseException{
         System.out.println();
         System.out.println("//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////");
@@ -60,7 +60,7 @@ public class Interface{
 
     }
 
-
+    // Permet de mettre à jour les différents fichiers Json lorsque nécessaire
     private static void miseAJour(){
         JSONObject now = TimeManager.getPresentTime();
 
@@ -104,7 +104,7 @@ public class Interface{
         }
     }
 
-
+    // Permet de seulement prendre comme réponse valide une des string de la string[] entré en argument
     public static String takeValidAnswer(String[] arguments){
         Scanner scanner = new Scanner(System.in);
         while(true){
@@ -120,7 +120,7 @@ public class Interface{
         }
     }
 
-
+    // Permet de seulement prendre comme réponse valide un entier positif
     public static long takePositiveInteger(){
         Scanner scanner = new Scanner(System.in);
         while(true){
@@ -142,6 +142,7 @@ public class Interface{
     /////// Fonctions pour locataire ///////
     ////////////////////////////////////////
 
+    // Permet de se connceter en tant que locataire
     private static void seConnecterLocataire() throws ParseException{
         System.out.println("\n\n////// Connexion - Locataire //////");
         Scanner scanner = new Scanner(System.in);
@@ -174,7 +175,7 @@ public class Interface{
         }
     }
 
-
+    // Permet de s'inscrire en tant que locataire
     private static void sInscrireLocataire() throws ParseException{
         System.out.println("\n\n////// Inscription - Locataire //////");
         Scanner scanner = new Scanner(System.in);
@@ -207,7 +208,7 @@ public class Interface{
         }
     }
     
-
+    // Menu qui permet d'avoir accès à toutes les fonctions d'un locataire
     private static void menuLocataire(String locataireName) throws ParseException{
         System.out.println("\n\n\n////////////////////////////////////////");
         System.out.println("/////////// Menu - Locataire ///////////");
@@ -259,7 +260,7 @@ public class Interface{
         }
     }
 
-
+    // Permet de faire une recherche parmi les unités et de conclure un bail
     private static void rechercheUniteLocataire(String nomLocataire){
         miseAJour();
         //1 - demande si veut juste voir toutes les unitées, toutes les unitées avec proposition de bail ou faire une recherche avancée.
@@ -452,12 +453,12 @@ public class Interface{
         Bail.addBailToJson(propositionDeBail, nomAssureur, numeroReferenceAssureur, nomLocataire);
     }
 
-
+    // Permet de voir l'historique des paiments et le total des soldes dus
     private static void paimentLocataire(String nomLocataire){
         Solde.afficherSoldeEtHistoriqueDePaiementLocataire(nomLocataire);;
     }
 
-
+    // Permet de gerrer les différentes information d'un compte locataire
     private static void compteLocataire(String nomLocataire) throws ParseException{
         System.out.println("\n\n////// Compte - Locataire //////");
 
@@ -525,7 +526,7 @@ public class Interface{
         }
     }
 
-
+    // Permet de visualiser le bail actuel et de renouveler le bail si possible
     private static void bailLocataire(String nomLocataire){
         miseAJour();
         Scanner scanner = new Scanner(System.in);
@@ -619,6 +620,7 @@ public class Interface{
     /////// Fonctions pour proprietaire ///////
     ///////////////////////////////////////////
 
+    // permet de se connecter en tant que propriétaire 
     private static void seConnecterProprietaire() throws ParseException{
         System.out.println("\n\n////// Connexion - Propriétaire //////");
         Scanner scanner = new Scanner(System.in);
@@ -651,7 +653,7 @@ public class Interface{
         }
     }
 
-
+    // Permet de s'inscrire en tant que propriétaire
     private static void sInscrireProprietaire() throws ParseException{
         System.out.println("\n\n////// Inscription - Propriétaire //////");
         Scanner scanner = new Scanner(System.in);
@@ -682,7 +684,7 @@ public class Interface{
         }
     }
 
-
+    // Menu pour accéder à toutes les foonctionnalité disponible pour un propriétaire
     private static void menuProprietaire(String nomProprietaire) throws ParseException{
         System.out.println("\n\n\n/////////////////////////////////////////");
         System.out.println("////////// Menu - Propriétaire //////////");
@@ -731,7 +733,7 @@ public class Interface{
         }
     }
 
-
+    // Permetde modifier les information du compte d'un propriétaire
     private static void compteProprietaire(String nomProprietaire) throws ParseException{
         System.out.println("\n\n////// Compte - Propriétaire //////");
 
@@ -761,7 +763,7 @@ public class Interface{
         
     }
 
-
+    // Permet de visualiser l'historique des paiements et d'entrer le paiment d'un locataire
     private static void paimentProprietaire(String nomProprietaire){
         System.out.println("\n\n////// Paiements - Propriétaire //////");
         while(true){
@@ -785,7 +787,7 @@ public class Interface{
         }
     }
 
-
+    // Permet de faire toutes les oppérations en lien avec les unités et les baux
     private static void uniteProprietaire(String nomProprietaire) throws ParseException{
         System.out.println("\n\n////// Unités et baux - Propriétaire //////");
 
@@ -802,6 +804,7 @@ public class Interface{
             String[] stringArray0 = {"u","m","l","b","p","r"};
             String reponse0 = takeValidAnswer(stringArray0);
             
+            //// Création d'une nouvelle unité
             if(reponse0.equals("u")){
                 while(true){
                     System.out.println("\nVeuillez entrer toutes les nouvelles informations en lien avec la nouvelle unité.");
@@ -846,6 +849,8 @@ public class Interface{
                 }
                 
             }
+
+            //// Modification d'une unité
             else if(reponse0.equals("m")){
                 miseAJour();
                 //1 - Montre toute les unités du propriétaire
@@ -856,6 +861,11 @@ public class Interface{
                 stringArrayList0.add("r");
 
                 int compte = 0;
+
+                System.out.println("Combiens d'unités à la fois voulez-vous voir?");
+                long n = takePositiveInteger();
+                long itteration = 0; 
+
                 System.out.println("X - ///// Type /// Aire(m2) /// Condition /// Adresse /////");
                 for (Object object : jarray) {
                     JSONObject unite = (JSONObject)object;
@@ -866,6 +876,16 @@ public class Interface{
                         " /// "+unite.get("Aire").toString()+
                         " /// "+unite.get("Condition").toString()+
                         " /// "+unite.get("Adresse").toString()+" /////");
+
+                        itteration++;
+                        if(itteration==n){
+                            String[] stringArrayYN = {"y","n"};
+                            System.out.println("Voulez voir plus d'unités? (y = oui, n = non)");
+                            String reponse = takeValidAnswer(stringArrayYN);
+                            if(reponse.equals("n")){break;}
+                            itteration = 0;
+                        }
+
                         compte++;
                     }
                 }
@@ -928,6 +948,8 @@ public class Interface{
                 }
                 //5 - Retour au menu
             }
+
+            //// Consulter les listes d'unités 
             else if(reponse0.equals("l")){
                 JSONArray bail_jarray = JsonManager.getArrayOfJsonFile("JsonBail.json");
                 JSONArray solde_jarray = JsonManager.getArrayOfJsonFile("JsonSolde.json");
@@ -936,7 +958,13 @@ public class Interface{
                 String reponse1 = takeValidAnswer(stringArray1);
                 System.out.println("");
                 int compte = 0;
+
+                System.out.println("Combiens d'unités à la fois voulez-vous voir?");
+                long n = takePositiveInteger();
+                long itteration = 0; 
+
                 if(reponse1.equals("r")){
+
                     System.out.println("\nVoici les baux à renouvellement prochain:\n");
                     System.out.println("X - ///// Locataire /// Nombre de periodes /////");
                     for(Object object : bail_jarray){
@@ -944,8 +972,18 @@ public class Interface{
                         if((Integer.parseInt(bail.get("Nombre de periode").toString()) <= 6) && Boolean.parseBoolean(bail.get("Renouvelable").toString())){
                             System.out.println(compte + " - ///// " + bail.get("Locataire").toString() + " /// " + bail.get("Nombre de periode") + " /////");
                         }
+
+                        itteration++;
+                        if(itteration==n){
+                            String[] stringArrayYN = {"y","n"};
+                            System.out.println("Voulez voir plus d'unités? (y = oui, n = non)");
+                            String reponse = takeValidAnswer(stringArrayYN);
+                            if(reponse.equals("n")){break;}
+                            itteration = 0;
+                        }
+
+                        compte++;
                     }
-                    compte++;
                 }
                 else if(reponse1.equals("f")){
                     System.out.println("\nVoici les baux de futur vacants:\n");
@@ -955,8 +993,18 @@ public class Interface{
                         if((Integer.parseInt(bail.get("Nombre de periode").toString()) <= 5) && !Boolean.parseBoolean(bail.get("Renouvelable").toString())){
                             System.out.println(compte + " - ///// " + bail.get("Locataire").toString() + " /// " + bail.get("Nombre de periode") + " /////");
                         }
+
+                        itteration++;
+                        if(itteration==n){
+                            String[] stringArrayYN = {"y","n"};
+                            System.out.println("Voulez voir plus d'unités? (y = oui, n = non)");
+                            String reponse = takeValidAnswer(stringArrayYN);
+                            if(reponse.equals("n")){break;}
+                            itteration = 0;
+                        }
+
+                        compte++;
                     }
-                    compte++;
                 }
                 else if(reponse1.equals("c")){
                     System.out.println("\nVoici les soldes de baux à collecter\n");
@@ -966,10 +1014,22 @@ public class Interface{
                         if((Integer.parseInt(solde.get("Total").toString()) - Integer.parseInt(solde.get("Payer").toString())) >= 2*Integer.parseInt(solde.get("Loyer").toString())){
                             System.out.println(compte + " - ///// " + solde.get("Locataire").toString() + " /// " + (Integer.parseInt(solde.get("Total").toString()) - Integer.parseInt(solde.get("Payer").toString())) + " /// " + solde.get("Identifiant de l'unite").toString() + " /////");
                         }
+
+                        itteration++;
+                        if(itteration==n){
+                            String[] stringArrayYN = {"y","n"};
+                            System.out.println("Voulez voir plus d'unités? (y = oui, n = non)");
+                            String reponse = takeValidAnswer(stringArrayYN);
+                            if(reponse.equals("n")){break;}
+                            itteration = 0;
+                        }
+
+                        compte++;
                     }
-                    compte++;
                 }
             }
+
+            //// Créer une propostion de bail
             else if(reponse0.equals("b")){
                 miseAJour();
                 //1 Affiche les unités qui peuvent avoir une nouvelle porp de bail (pas réservé, pas en construction, n'a pas déjà une prop)
@@ -1093,11 +1153,15 @@ public class Interface{
                 }
                 
             }
+
+            //// Modifier une proposition de bail
             else if(reponse0.equals("p")){
                 miseAJour();
                 PropositionDeBail.modifierPropositionDeBail(nomProprietaire);
             }
             
+
+            //// Retourner au menu pricipal
             else{
                 menuLocataire(nomProprietaire);
                 System.out.println("--------------------");

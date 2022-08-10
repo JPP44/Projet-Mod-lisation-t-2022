@@ -8,11 +8,7 @@ import org.json.simple.JSONObject;
 
 public class TimeManager {
 
-    public static void main(String[] args) {
-        JSONObject newDate = takeValidJObjectDate();
-        System.out.println(newDate);
-
-    }
+    // Permet de convertir une période de temps en seconde
     public static long calulateTimeIntervalInSeconds(String periode, long nbPeriode){
         long timeInterval;
         if(periode.equals("Mois")){
@@ -33,6 +29,7 @@ public class TimeManager {
         return timeInterval;
     }
 
+    // Retourne une date+un interval de temps en seconde
     public static JSONObject addTimeIntervalToJDate(JSONObject jDate, long interval){
         long anneL = (long)jDate.get("Annee");
         long moisL = (long)jDate.get("Mois");
@@ -59,6 +56,7 @@ public class TimeManager {
         return newJDate;
     }
 
+    // Retourne un jobject avec la date actuelle
     public static JSONObject getPresentTime(){
         Calendar cal = Calendar.getInstance();
         JSONObject jDate = new JSONObject();
@@ -71,7 +69,7 @@ public class TimeManager {
         return jDate;
     }
 
-    //Générise l'entrée de date pour renvoyer un objet de type JSONObject
+    //Génère l'entrée de date pour renvoyer un objet de type JSONObject
     public static JSONObject takeValidJObjectDate(){
         long seconde, minute, heure, jour, mois, annee;
         Boolean isToday;
@@ -197,6 +195,7 @@ public class TimeManager {
         return jDate;
     }
 
+    // Teste avec 2 date en jobject si l'une est avant l'autre 
     public static Boolean getDate1BeforeDate2(JSONObject date1, JSONObject date2){
         long anneL1 = (long)date1.get("Annee");
         long moisL1 = (long)date1.get("Mois");
