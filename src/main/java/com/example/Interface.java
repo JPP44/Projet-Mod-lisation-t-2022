@@ -1,7 +1,3 @@
-/*
- * Test
- */
-
 package com.example;
 
 import java.util.ArrayList;
@@ -22,7 +18,8 @@ import org.json.simple.parser.ParseException;
 public class Interface{
 
     public static void main( String[] args ) throws ParseException {
-        startSystem();
+        //startSystem();
+        uniteProprietaire("j");
     }
 
 
@@ -217,6 +214,7 @@ public class Interface{
             System.out.println();
         }
     }
+
 
     private static void rechercheUniteLocataire(String nomLocataire){
         //1 - demande si veut juste voir toutes les unitées, toutes les unitées avec proposition de bail ou faire une recherche avancée.
@@ -884,7 +882,46 @@ public class Interface{
                 //5 - Retour au menu
             }
             else if(reponse0.equals("l")){
-
+                JSONArray bail_jarray = JsonManager.getArrayOfJsonFile("JsonBail.json");
+                JSONArray solde_jarray = JsonManager.getArrayOfJsonFile("JsonSolde.json");
+                System.out.println("\nVoulez-vous voir la liste de baux à renouvellement prochain = r, de futur vacants = f, ou de collection = c?");
+                String[] stringArray1 = {"r","f","c"};
+                String reponse1 = takeValidAnswer(stringArray1);
+                System.out.println("");
+                int compte = 0;
+                if(reponse1.equals("r")){
+                    System.out.println("\nVoici les baux à renouvellement prochain:\n");
+                    System.out.println("X - ///// Locataire /// Nombre de periodes /////");
+                    for(Object object : bail_jarray){
+                        JSONObject bail = (JSONObject)object;
+                        if((Integer.parseInt(bail.get("Nombre de periode").toString()) <= 6) && Boolean.parseBoolean(bail.get("Renouvelable").toString())){
+                            System.out.println(compte + " - ///// " + bail.get("Locataire").toString() + " /// " + bail.get("Nombre de periode") + " /////");
+                        }
+                    }
+                    compte++;
+                }
+                else if(reponse1.equals("f")){
+                    System.out.println("\nVoici les baux de futur vacants:\n");
+                    System.out.println("X - ///// Locataire /// Nombre de periodes /////");
+                    for(Object object : bail_jarray){
+                        JSONObject bail = (JSONObject)object;
+                        if((Integer.parseInt(bail.get("Nombre de periode").toString()) <= 5) && !Boolean.parseBoolean(bail.get("Renouvelable").toString())){
+                            System.out.println(compte + " - ///// " + bail.get("Locataire").toString() + " /// " + bail.get("Nombre de periode") + " /////");
+                        }
+                    }
+                    compte++;
+                }
+                else if(reponse1.equals("c")){
+                    System.out.println("\nVoici les soldes de baux à collecter\n");
+                    System.out.println("X - ///// Locataire /// Solde dû /// Unité /////");
+                    for(Object object : solde_jarray){
+                        JSONObject solde = (JSONObject)object;
+                        if((Integer.parseInt(solde.get("Total").toString()) - Integer.parseInt(solde.get("Payer").toString())) >= 2*Integer.parseInt(solde.get("Loyer").toString())){
+                            System.out.println(compte + " - ///// " + solde.get("Locataire").toString() + " /// " + (Integer.parseInt(solde.get("Total").toString()) - Integer.parseInt(solde.get("Payer").toString())) + " /// " + solde.get("Identifiant de l'unite").toString() + " /////");
+                        }
+                    }
+                    compte++;
+                }
             }
             else if(reponse0.equals("b")){
                 //1 Affiche les unités qui peuvent avoir une nouvelle porp de bail (pas réservé, pas en construction, n'a pas déjà une prop)
