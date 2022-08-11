@@ -39,7 +39,12 @@ public class Bail {
         JsonManager.modifyBoolArgumentOfList("JsonLocataire.json", "Nom d'utilisateur", nomLocataire, "Cherche location", false);
         JsonManager.modifyArgumentOfList("JsonLocataire.json", "Nom d'utilisateur", nomLocataire, "Proprietaire actuel", unite.get("Nom d'utilisateur du proprietaire").toString());
         JsonManager.addObjectToJsonList(bail, "JsonBail.json");
+
+        System.out.println(proposition.get("Identifiant de l'unite"));
+        System.out.println("Avant renouvellement");
+        System.out.println((Boolean)proposition.get("Renouvelable"));
         if((Boolean)proposition.get("Renouvelable")){
+            System.out.println("Dans renouvellement");
             proposition.put("Visible",false);
             long interval = TimeManager.calulateTimeIntervalInSeconds(proposition.get("Periode").toString(), (long)proposition.get("Nombre de periode"));
             JSONObject dateDedebut = TimeManager.addTimeIntervalToJDate((JSONObject)proposition.get("Date de debut"), 1+interval);

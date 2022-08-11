@@ -132,6 +132,7 @@ public class Solde {
         JSONArray soldes = JsonManager.getArrayOfJsonFile("JsonSolde.json");
         System.out.println("\nVoici vos soldes: \n");
         ArrayList<String> indexList = new ArrayList<String>();
+        indexList.add("r");
         ArrayList<String> baiIdList = new ArrayList<String>();
         int compte = 0;
         for (Object object : soldes) {
@@ -153,7 +154,7 @@ public class Solde {
         }
         String[] stringArray1 = new String[indexList.size()];
         stringArray1 = indexList.toArray(stringArray1);
-        System.out.println("Veuillez entrer le numéro du solde que vous voulez ajouter un paiement.");
+        System.out.println("Veuillez entrer le numéro du solde que vous voulez ajouter un paiement ou r pour ne pas faire de paiement.");
         String reponse = Interface.takeValidAnswer(stringArray1);
         String idBail = baiIdList.get(Integer.valueOf(reponse));
         JSONObject solde = JsonManager.getJsonObjectOfAList("JsonSolde.json", "Identifiant du bail", idBail);

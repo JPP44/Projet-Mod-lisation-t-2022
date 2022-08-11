@@ -269,6 +269,7 @@ public class Interface{
         String reponse = takeValidAnswer(stringArray0);
         JSONArray jarray = JsonManager.getArrayOfJsonFile("JsonUnite.json");
         ArrayList<String> unitesAvecProposition = new ArrayList<String>();
+        unitesAvecProposition.add("r");
         ArrayList<String> stringArrayListUniteNames = new ArrayList<String>(); 
 
         int compte = 0;
@@ -294,7 +295,7 @@ public class Interface{
                         unitesAvecProposition.add(String.valueOf(compte));
                         System.out.print(" /// true");
                     }else{System.out.print(" /// false");}
-                }
+                }else{System.out.print(" /// false");}
                 System.out.println(" /// "+unite.get("Adresse").toString()+" /////");
                 
                 compte++;
@@ -406,8 +407,9 @@ public class Interface{
         }
         JSONObject propositionDeBail = new JSONObject();
         while(true){
-            System.out.println("Quelle unité voulez vous faire un bail avec?");
+            System.out.println("Quelle unité voulez vous faire un bail avec? (entrez r si vous avez changé d'avis)");
             reponse = takeValidAnswer(arrayUniteAvecPropositions);
+            if(reponse.equals("r")){return;}
             //Écrit les infos du bail
             System.out.println("Voici les information du bail: ");
             String nomUnite = stringArrayListUniteNames.get(Integer.valueOf(reponse));
@@ -415,6 +417,7 @@ public class Interface{
             JSONObject dateDeDebut = (JSONObject)propositionDeBail.get("Date de debut");
             System.out.println("- Durée d'une periode: "+propositionDeBail.get("Periode")+
             "\n- Nombre de période: "+propositionDeBail.get("Nombre de periode")+
+            "\n- Renouvelable: "+propositionDeBail.get("Renouvelable")+
             "\n- Loyer: "+propositionDeBail.get("Loyer")+"$ par période."+
             "\n- Date du début du bail: "+dateDeDebut.get("Annee")+"/"+dateDeDebut.get("Mois")+"/"+dateDeDebut.get("Jour")+" "+dateDeDebut.get("Heure")+":"+dateDeDebut.get("Minute")+":"+dateDeDebut.get("Seconde"));
             System.out.println("- Suppléments:");
@@ -710,7 +713,7 @@ public class Interface{
                 compteProprietaire(nomProprietaire);
                 return;
             }
-            else if(reponse0.equals("r")){
+            else if(reponse0.equals("s")){
                 System.out.println("Ètes-vous sûr de vouloir quitter la session? (y = oui, n = non)");
                 String[] stringArray1 = {"y","n"};
                 String reponse1 = takeValidAnswer(stringArray1);
@@ -807,6 +810,8 @@ public class Interface{
             //// Création d'une nouvelle unité
             if(reponse0.equals("u")){
                 while(true){
+                    System.out.println("Appuyez entrer pour continuer\n");
+                    
                     System.out.println("\nVeuillez entrer toutes les nouvelles informations en lien avec la nouvelle unité.");
                     System.out.println("- Entrez le type de l'unité (l = logement, s = surface ouverte commerciale, m = magasin)");
                     String[] stringArray1 = {"l","s","m"};
@@ -830,7 +835,7 @@ public class Interface{
                     System.out.println("- Entrez le nombre de salle(s) de bains(s):");
                     long nbSalleDeBain= takePositiveInteger();
                     System.out.print("- Entrez la date de construction de l'unité: ");
-                    String date = scanner.next();
+                    String date = scanner.nextLine();
                     System.out.println("- Entrez la condition de l'unité (l = louable, r = pas louable pour réparation)");
                     String[] stringArray2 = {"l","r"};
                     String reponse2 = takeValidAnswer(stringArray2);
