@@ -1,1 +1,1 @@
-{"propositionDeBailList":[]}
+{"propositionDeBailList":[{"Loyer":200,"Proprietaire":"g","Nombre de periode":6,"Periode":"Mois","Renouvelable":true,"Date de fin":{"Jour":28,"Minute":2,"Seconde":3,"Annee":2023,"Mois":8,"Heure":2},"Est pour un renouvlement":false,"Supplements":[],"Date de debut":{"Jour":1,"Minute":2,"Seconde":3,"Annee":2023,"Mois":3,"Heure":1},"Identifiant de l'unite":"g5","Est pour un renouvelement":true,"Visible":false,"Identifiant":"g4"}]}

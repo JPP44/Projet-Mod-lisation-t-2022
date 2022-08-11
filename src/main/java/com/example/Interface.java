@@ -90,6 +90,7 @@ public class Interface{
             JSONObject proposition = (JSONObject)object;
             JSONObject dateDeDebut = (JSONObject)proposition.get("Date de debut");
             if(TimeManager.getDate1BeforeDate2(dateDeDebut, now)&&!(Boolean)proposition.get("Est pour un renouvlement")){
+                System.out.println("Mise à jour supprime une proposition");
                 JsonManager.modifyBoolArgumentOfList("JsonUnite.json", "Identifiant", proposition.get("Identifiant de l'unite").toString(), "Possede une proposition de bail", false);
                 JsonManager.removeObjectToJsonList("Identifiant", proposition.get("Identifiant").toString(), "JsonPropositionDeBail.json");
             }
@@ -797,7 +798,7 @@ public class Interface{
     }
 
     // Permet de visualiser l'historique des paiements et d'entrer le paiment d'un locataire
-    private static void paimentProprietaire(String nomProprietaire){
+    private static void paimentProprietaire(String nomProprietaire) throws ParseException{
         System.out.println("\n\n////// Paiements - Propriétaire //////");
         while(true){
             System.out.println("Veuillez sélectionner l'action que vous voulez effectuer.");
@@ -815,6 +816,7 @@ public class Interface{
                 Solde.saisirPaiement(nomProprietaire);
             }
             else{
+                menuProprietaire(nomProprietaire);
                 return;
             }
         }
@@ -969,7 +971,7 @@ public class Interface{
                             for (Object object : jArray2) {
                                 JSONObject proposition = (JSONObject)object;
                                 if(proposition.get("Proprietaire").equals(nomProprietaire)){
-                                    JsonManager.removeObjectToJsonList("Proprietaire", nomProprietaire, "JsonPropositionDeBail.json");
+                                    JsonManager.removeObjectToJsonList("Identifiant de l'unite", nomUnite, "JsonPropositionDeBail.json");
                                     break;
                                 }
                             }
@@ -1199,6 +1201,7 @@ public class Interface{
             //// Retourner au menu pricipal
             else{
                 System.out.println("\n--------------------\n");
+                menuProprietaire(nomProprietaire);
                 return;
             }
             System.out.println("\n--------------------\n");

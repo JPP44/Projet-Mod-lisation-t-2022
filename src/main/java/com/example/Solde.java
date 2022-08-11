@@ -118,8 +118,9 @@ public class Solde {
                 "\n- Payé: "+payer+"$\n------------------------------\n");
             }
 
-            System.out.println("Total des soldes dus: "+soldeDuTotal+"$\n------------------------------\n");
+            
         }
+        System.out.println("Total des soldes dus: "+soldeDuTotal+"$\n------------------------------\n");
     }
 
 
@@ -133,12 +134,12 @@ public class Solde {
         int compte = 0;
         for (Object object : soldes) {
             JSONObject solde = (JSONObject)object;
-            if(solde.get("Proprietaire").toString().equals(nomProprietaire)&&(Boolean)solde.get("Fini de payer")){
+            if(solde.get("Proprietaire").toString().equals(nomProprietaire)&&!(Boolean)solde.get("Fini de payer")){
                 JSONObject unite = JsonManager.getJsonObjectOfAList("JsonUnite.json", "Identifiant", solde.get("Identifiant de l'unite").toString());
                 JSONObject bail = JsonManager.getJsonObjectOfAList("JsonBail.json", "Identifiant", solde.get("Identifiant du bail").toString());
                 JSONObject dateDebut = (JSONObject)bail.get("Date de debut");
                 JSONObject locataire = JsonManager.getJsonObjectOfAList("JsonPersonne.json", "Nom d'utilisateur", solde.get("Locataire").toString());
-                System.out.println("0 - /// "+unite.get("Adresse").toString()+" - "+
+                System.out.println(compte+" - /// "+unite.get("Adresse").toString()+" - "+
                 dateDebut.get("Annee").toString()+"/"+dateDebut.get("Mois").toString()+"/"+dateDebut.get("Jour").toString()+
                 "\n/// Locataire: "+locataire.get("Prenom").toString()+" "+locataire.get("Nom").toString());
                 System.out.println("- Total: "+solde.get("Total")+"$"+
@@ -152,6 +153,7 @@ public class Solde {
         stringArray1 = indexList.toArray(stringArray1);
         System.out.println("Veuillez entrer le numéro du solde que vous voulez ajouter un paiement ou r pour ne pas faire de paiement.");
         String reponse = Interface.takeValidAnswer(stringArray1);
+        if(reponse.equals("r")){return;}
         String idBail = baiIdList.get(Integer.valueOf(reponse));
         JSONObject solde = JsonManager.getJsonObjectOfAList("JsonSolde.json", "Identifiant du bail", idBail);
         long total = (long)solde.get("Total");
