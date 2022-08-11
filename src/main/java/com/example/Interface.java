@@ -74,7 +74,7 @@ public class Interface{
                     JSONObject proposition = JsonManager.getJsonObjectOfAList("JsonPropositionDeBail.json", "Identifiant de l'unite", unite.get("Identifiant").toString());
                     JsonManager.modifyBoolArgumentOfList("JsonUnite.json", "Identifiant", unite.get("Identifiant").toString(), "Possede une proposition de bail", false);
                     JsonManager.modifyBoolArgumentOfList("JsonLocataire.json", "Nom d'utilisateur", locataire.get("Nom d'utilisateur").toString(), "A renouvele le bail", false);
-                    JsonManager.removeObjectToJsonList("Identifiant", proposition.get("Identifiant").toString(),"JsonPropositionDeBail");
+                    JsonManager.removeObjectToJsonList("Identifiant", proposition.get("Identifiant").toString(),"JsonPropositionDeBail.json");
                     Bail.addBailToJson(proposition, bail.get("Nom assureur").toString(), bail.get("Numero assurance").toString(), bail.get("Locataire").toString());
                 }
                 else{
@@ -1198,8 +1198,7 @@ public class Interface{
 
             //// Retourner au menu pricipal
             else{
-                menuLocataire(nomProprietaire);
-                System.out.println("--------------------");
+                System.out.println("\n--------------------\n");
                 return;
             }
             System.out.println("\n--------------------\n");
