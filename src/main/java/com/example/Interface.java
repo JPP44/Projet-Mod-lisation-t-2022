@@ -3,16 +3,8 @@ package com.example;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import java.time.LocalDateTime;
-
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class Interface{
@@ -276,6 +268,10 @@ public class Interface{
          
         //2 - Affiche les unités selon le choix en 1.
         if(reponse.equals("t")){
+            System.out.println("Combiens d'unités à la fois voulez-vous voir?");
+            long n = takePositiveInteger();
+            long itteration = 0; 
+
             System.out.println("\nVoici les unités:\n");
             System.out.println("X - ///// Type /// Aire(m2) /// Condition /// État /// Nom propriétaire /// Possède une proposition de bail /// Adresse /////");
             for (Object object : jarray) {
@@ -298,10 +294,22 @@ public class Interface{
                 }else{System.out.print(" /// false");}
                 System.out.println(" /// "+unite.get("Adresse").toString()+" /////");
                 
+                itteration++;
+                if(itteration==n){
+                    System.out.println("Voulez voir plus d'unités? (y = oui, n = non)");
+                    reponse = takeValidAnswer(stringArray0);
+                    if(reponse.equals("n")){break;}
+                    itteration = 0;
+                }
+
                 compte++;
             }
         }
         else if(reponse.equals("p")){
+            System.out.println("Combiens d'unités à la fois voulez-vous voir?");
+            long n = takePositiveInteger();
+            long itteration = 0; 
+
             System.out.println("\nVoici les unités:\n");
             System.out.println("X - ///// Type /// Aire(m2) /// Condition /// État /// Nom propriétaire /// Adresse /////");
             for (Object object : jarray) {
@@ -318,6 +326,15 @@ public class Interface{
                         " /// "+unite.get("Etat").toString()+
                         " /// "+proprietaire.get("Prenom").toString()+" "+proprietaire.get("Nom").toString()+
                         " /// "+unite.get("Adresse").toString()+" /////");
+
+                        itteration++;
+                        if(itteration==n){
+                            System.out.println("Voulez voir plus d'unités? (y = oui, n = non)");
+                            reponse = takeValidAnswer(stringArray0);
+                            if(reponse.equals("n")){break;}
+                            itteration = 0;
+                        }
+
                         compte++;
                     }
                 }
@@ -360,6 +377,11 @@ public class Interface{
                 }
             }
             System.out.println("");
+
+            System.out.println("Combiens d'unités à la fois voulez-vous voir?");
+            long n = takePositiveInteger();
+            long itteration = 0; 
+
             System.out.println("\nVoici les unités:\n");
             System.out.println("X - ///// Type /// Aire(m2) /// Condition /// État /// Nom propriétaire /// Possède une proposition de bail /// Adresse /////");
             for (Object object : jarray) {
@@ -388,6 +410,14 @@ public class Interface{
                     }
                     System.out.println(" /// "+unite.get("Adresse").toString()+" /////");
                     
+                    itteration++;
+                    if(itteration==n){
+                        System.out.println("Voulez voir plus d'unités? (y = oui, n = non)");
+                        reponse = takeValidAnswer(stringArray0);
+                        if(reponse.equals("n")){break;}
+                        itteration = 0;
+                    }
+
                     compte++;
                 }
             }

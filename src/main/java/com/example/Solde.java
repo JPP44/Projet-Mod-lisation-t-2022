@@ -1,15 +1,11 @@
 package com.example;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Solde {
-    public static void main(String[] args) {
-        afficherSoldeEtHistoriqueDePaiementLocataire("JPP");
-    }
     
     // Créer un nouveau solde et l'ajoute au json
     public static void addSoldeToJson(String bailId, JSONObject propDeBail,String nomLocataire){

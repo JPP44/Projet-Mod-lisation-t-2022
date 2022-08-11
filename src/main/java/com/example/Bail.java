@@ -1,6 +1,5 @@
 package com.example;
 
-import org.json.JSONArray;
 import org.json.simple.JSONObject;
 
 public class Bail {
